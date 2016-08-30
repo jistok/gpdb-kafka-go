@@ -16,7 +16,7 @@ consumer will utilize GPDB _external web tables_, since they are able to run an 
 in parallel, to ingest data.
 
 ## Why Go?
-* I am trying to learn Go.
+* I am trying to learn Go and Kafka (maybe this is also a caveat).
 * Go builds a single, statically linked binary, which has all its dependencies built in, which makes it simpler to install than, say, a Python or Java program.
 
 ## What's Required to Get This Running?
@@ -43,6 +43,10 @@ This example will involve creating a single table, _crimes_, within GPDB and loa
 1. Back at the terminal on your laptop, grab the [sample data file](https://s3.amazonaws.com/goddard.bds.datasets/chicago_crimes_100k_rows.csv.bz2) (MD5: 6f05a6ea98576eff13ff16b0da9559ec).  This contains 100,000 lines, plus a header (the first line).
 1. You'll need a way to produce data into the topic you created earlier, using this data set.  Within this repo, there is a [source file](./kafka_producer.go), also in Go, that you can compile and run.  If you are using OS X, there is a [pre-compiled binary](./kafka_producer.darwin.amd64) you can use.  That is the one we'll use in the next step.  This program just reads its stdin and produces to the given Kafka topic.  It loads a batch of 5000 rows, then waits for five seconds before sending the next batch.
 1. Finally, kick off the load of the data file into the Kafka topic: `bzcat ./chicago_crimes_100k_rows.csv.bz2 | tail -n +2 | ./kafka_producer.darwin.amd64 -topic chicago_crimes` (the `tail -n +2` just skips the header line).
+
+These images show the action going on within each of the three terminal sessions during this data load process
+The first shows the situation shortly after the load into Kafka begins, and the second shows all 100k rows loaded
+into the GPDB table.
 
 ![Initial view of data loading process](./Kafka_Load_01.png)
 
