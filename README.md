@@ -9,7 +9,7 @@ for the consumed records within Zookeeper, using `consumer.CommitUpto(msg)`
 the alternative approach, of storing the offsets within a Kafka topic, is probably faster;
 there is an early version of this approach [here](./extras/kafka_cluster_cli.go).
 
-The [./attic](./attic) directory contains some scripts that may be useful.  For example, when
+The ./attic directory contains some scripts that may be useful.  For example, when
 using Zookeeper to store offsets, it's possible to _rewind_ a topic by
 [exporting](./extras/zk_export_offsets.sh) the offsets, editing the resulting file, then
 [importing](./extras/zk_import_offsets.sh) them from that file.
