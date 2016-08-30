@@ -4,8 +4,7 @@ package main
 
 BUILD:
 - Install / set up Go
-- `go get github.com/Shopify/sarama`
-- `go get github.com/wvanbergen/kafka/consumergroup`
+- `go get github.com/Shopify/sarama github.com/wvanbergen/kafka/consumergroup`
 - `go build kafka_consumer.go`
 
 INSTALL:
