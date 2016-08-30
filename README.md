@@ -17,9 +17,11 @@ in parallel, to ingest data.
 
 ## Why Go?
 * I am trying to learn Go.
-* With to, you get a single, statically linked binary, which has all its dependencies built-in.
+* Go builds a single, statically linked binary, which has all its dependencies built in.
 
 ## What's Required to Get This Running?
 * A Running Kafka installation.  I followed the [Quick Start](http://kafka.apache.org/07/quickstart.html).
 * A [Go installation](https://golang.org/doc/install)
 * An installation of GPDB.  The [GPDB Sandbox VM](https://network.pivotal.io/products/pivotal-gpdb#/releases/1683/file_groups/411) would work just fine for trying this out.
+
+## Running Through an example
