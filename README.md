@@ -28,4 +28,4 @@ in parallel, to ingest data.
 ## Running Through an Example
 1. Resolve the dependencies: `go get github.com/wvanbergen/kafka/consumergroup github.com/Shopify/sarama`
 1. Build the executable: `go build kafka_consumer.go`
-1. Install the resulting executable, kafka_consumer, into the ``$HOME` directory of the gpadmin user on each of your GPDB segment hosts (or, just onto the single host if you are using the GPDB Sandbox VM).
+1. Install the resulting executable, kafka_consumer, into the `$HOME` directory of the gpadmin user on each of your GPDB segment hosts (or, just onto the single host if you are using the GPDB Sandbox VM).
