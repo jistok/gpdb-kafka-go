@@ -23,5 +23,9 @@ in parallel, to ingest data.
 * A Running Kafka installation.  I followed the [Quick Start](http://kafka.apache.org/07/quickstart.html).
 * A [Go installation](https://golang.org/doc/install)
 * An installation of GPDB.  The [GPDB Sandbox VM](https://network.pivotal.io/products/pivotal-gpdb#/releases/1683/file_groups/411) would work just fine for trying this out.
+* The [Go source file](./kafka_consumer.go) for the Kafka consumer
 
-## Running Through an example
+## Running Through an Example
+1. Resolve the dependencies: `go get github.com/wvanbergen/kafka/consumergroup github.com/Shopify/sarama`
+1. Build the executable: `go build kafka_consumer.go`
+1. Install the executable onto each of your GPDB segment hosts, into the $HOME directory of the gpadmin user
