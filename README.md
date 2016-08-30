@@ -2,7 +2,10 @@
 
 This is a simple Kafka consumer to enable Greenplum Database (GPDB) to load data from
 a Kafka topic using GPDB's _external web table_ capability.  This client is written
-in Go.
+in Go.  It uses the concept of _Consumer Group_, which is a way Kafka can ensure that
+data consumed in parallel will not be duplicated.  Also, this version stores the offsets
+for the consumed records within Zookeeper, using `consumer.CommitUpto(msg)`
+(see ./kafka_consumer.go).
 
 ## What is Kafka?
 _Kafka is a distributed, partitioned, replicated commit log service. It provides the functionality of a messaging system, but with a unique design._ See the [Kafka docs](http://kafka.apache.org/documentation.html#introduction) for a nice introduction.
