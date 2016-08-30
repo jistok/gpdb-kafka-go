@@ -12,20 +12,24 @@ import (
 	"github.com/Shopify/sarama"
 )
 
-var (
-	brokerList  = flag.String("brokers", "localhost:9092", "The comma separated list of brokers in the Kafka cluster")
-	topic       = flag.String("topic", "", "The topic to produce to")
-	partitioner = flag.String("partitioner", "random", "The partitioning scheme to use. Can be `hash`, or `random`")
-	verbose     = flag.Bool("verbose", false, "Whether to turn on sarama logging")
-
-	logger = log.New(os.Stderr, "", log.LstdFlags)
+// Alter these as you like
+const (
+	tSleepSeconds = 5    // Time to pause, in seconds, between batches
+	batchSize     = 5000 // Number of rows per batch
 )
 
-// Usage -- override Usage within the flag package
+var (
+	brokerList = flag.String("brokers", "localhost:9092", "The comma separated list of brokers in the Kafka cluster")
+	topic      = flag.String("topic", "", "The topic to produce to")
+	logger     = log.New(os.Stderr, "", log.LstdFlags)
+)
+
+// Usage -- overrides Usage within the flag package
 var Usage = func() {
 	fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-	fmt.Fprintf(os.Stderr, "\n  %s reads from stdin and, loads each line into Kafka\n\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "\n  %s reads from stdin and loads each line into Kafka\n\n", os.Args[0])
 	flag.PrintDefaults()
+	fmt.Fprintln(os.Stderr, "")
 }
 
 func main() {
@@ -37,25 +41,12 @@ func main() {
 
 	flag.Parse()
 
-	if *verbose {
-		sarama.Logger = logger
-	}
-
-	var partitionerConstructor sarama.PartitionerConstructor
-	switch *partitioner {
-	case "hash":
-		partitionerConstructor = sarama.NewHashPartitioner
-	case "random":
-		partitionerConstructor = sarama.NewRandomPartitioner
-	default:
-		log.Fatalf("Partitioner %s not supported.", *partitioner)
-	}
+	partitionerConstructor := sarama.NewRandomPartitioner
 
 	var keyEncoder, valueEncoder sarama.Encoder
 
 	config := sarama.NewConfig()
 	config.Producer.Partitioner = partitionerConstructor
-
 	producer, err := sarama.NewSyncProducer(strings.Split(*brokerList, ","), config)
 	if err != nil {
 		logger.Fatalln("FAILED to open the producer:", err)
@@ -67,8 +58,8 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		// Batch it
-		if nLines%2500 == 0 {
-			time.Sleep(5 * time.Second)
+		if nLines%batchSize == 0 {
+			time.Sleep(tSleepSeconds * time.Second)
 		}
 		line := scanner.Text()
 		valueEncoder = sarama.StringEncoder(line)
