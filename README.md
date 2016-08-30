@@ -26,10 +26,13 @@ in parallel, to ingest data.
 * The [Go source file](./kafka_consumer.go) for the Kafka consumer
 
 ## Try Out an Example
-This example will involve creating a single table, _crimes_, within GPDB and loading 100,000 rows through Kafka.  This data set is accessible [here](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2/data), but there is a small subset out in S3 (see below).
+This example will involve creating a single table, _crimes_, within GPDB and loading 100,000 rows through Kafka.  This data set is accessible [here](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2/data) but, for this example, there is a small subset stored in S3 (see below).
 
 1. Resolve the dependencies: `go get github.com/wvanbergen/kafka/consumergroup github.com/Shopify/sarama`
 1. Build the executable: `go build kafka_consumer.go`
 1. Install the resulting executable, kafka_consumer, into the `$HOME` directory of the gpadmin user on each of your GPDB segment hosts (or, just onto the single host if you are using the GPDB Sandbox VM).
 1. Create a _topic_ in Kafka, with two _partitions_: `./kafka_2.11-0.10.0.0/bin/kafka-topics.sh --create --topic chicago_crimes --replication-factor 1 --partitions 2 --zookeeper localhost:2181`
+1. Upon success, you should be able to see it in the output when you list the topics: `./kafka_2.11-0.10.0.0/bin/kafka-topics.sh --list --zookeeper localhost:2181`
+1. Log in to your GPDB master host, as user _gpadmin_
+1. To make the external table definition constant, so there is no need to edit its SQL, determine the IP number of the host running your Kafka installation's Zookeeper server, and add an entry for this IP in your `/etc/hosts` file, aliased to the host name _my_zk_host_.  In my setup, it would look like this: `172.16.1.1 my_zk_host`
 1. Grab the [sample data file](https://s3.amazonaws.com/goddard.bds.datasets/chicago_crimes_100k_rows.csv.bz2) (MD5: 6f05a6ea98576eff13ff16b0da9559ec).
