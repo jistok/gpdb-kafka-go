@@ -39,5 +39,11 @@ This example will involve creating a single table, _crimes_, within GPDB and loa
 1. Using the [SQL file containing the DDL for these tables](./gpdb_create_tables.sql), and the _psql_ client, create the two tables (one is the table to load; the other is the external table): `psql template1 -f ./gpdb_create_tables.sql`
 1. At this point, you should be able to run a quick query to verify this is working: `psql template1 -c "SELECT * FROM crimes_kafka"`, which should run but return zero rows of output, since the Kafka topic is empty at this point.
 1. If all is well, you can start a periodic load there.  For the purposes of this demo, just run the query to load the table every five seconds: `[gpadmin@mdw ~]$ while `true` ; do psql template1 -c "INSERT INTO crimes SELECT * FROM crimes_kafka" ; sleep 5 ; done` (the output should be `INSERT 0 0`, showing no data being inserted).
+1. In a separate terminal window, also logged into the GPDB master host, as _gpadmin_, start the following command so you're able to track the progress of the load from Kafka: `while `true` ; do psql template1 -c "SELECT COUNT(*) FROM crimes" ; sleep 5 ; done`
 1. Back at the terminal on your laptop, grab the [sample data file](https://s3.amazonaws.com/goddard.bds.datasets/chicago_crimes_100k_rows.csv.bz2) (MD5: 6f05a6ea98576eff13ff16b0da9559ec).  This contains 100,000 lines, plus a header (the first line).
 1. You'll need a way to produce data into the topic you created earlier, using this data set.  Within this repo, there is a [source file](./kafka_producer.go), also in Go, that you can compile and run.  If you are using OS X, there is a [pre-compiled binary](./kafka_producer.darwin.amd64) you can use.  That is the one we'll use in the next step.  This program just reads its stdin and produces to the given Kafka topic.  It loads a batch of 5000 rows, then waits for five seconds before sending the next batch.
+1. Finally, kick off the load of the data file into the Kafka topic: `bzcat ./chicago_crimes_100k_rows.csv.bz2 | tail -n +2 | ./kafka_producer.darwin.amd64 -topic chicago_crimes` (the `tail -n +2` just skips the header line).
+
+![Initial view of data loading process](./Kafka_Load_01.png)
+
+![Final view of data loading process](./Kafka_Load_02.png)
