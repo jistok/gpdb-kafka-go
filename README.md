@@ -5,7 +5,14 @@ a Kafka topic using GPDB's _external web table_ capability.  This client is writ
 in Go.  It uses the concept of _Consumer Group_, which is a way Kafka can ensure that
 data consumed in parallel will not be duplicated.  Also, this version stores the offsets
 for the consumed records within Zookeeper, using `consumer.CommitUpto(msg)`
-(see ./kafka_consumer.go).
+(see ./kafka_consumer.go).  Doing this once per record is likely slowing things down, and
+the alternative approach, of storing the offsets within a Kafka topic, is probably faster;
+there is an early version of this approach [here](./extras/kafka_cluster_cli.go).
+
+The [./attic](./attic) directory contains some scripts that may be useful.  For example, when
+using Zookeeper to store offsets, it's possible to _rewind_ a topic by
+[exporting](./extras/zk_export_offsets.sh) the offsets, editing the resulting file, then
+[importing](./extras/zk_import_offsets.sh) them from that file.
 
 ## What is Kafka?
 _Kafka is a distributed, partitioned, replicated commit log service. It provides the functionality of a messaging system, but with a unique design._ See the [Kafka docs](http://kafka.apache.org/documentation.html#introduction) for a nice introduction.
