@@ -36,7 +36,7 @@ in parallel, to ingest data.
 * The [Go source file](./kafka_consumer.go) for the Kafka consumer
 
 ## Try Out an Example
-This example will involve creating a single table, _crimes_, within GPDB and loading 100,000 rows through Kafka.  This data set is accessible [here](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2/data) but, for this example, there is a small subset stored in S3 (see below).  In this example, I envision running one terminal on the local machine and another on the GPDB master host.
+This example will involve creating a single table, _crimes_, within GPDB and loading 100,000 rows through Kafka.  This data set is accessible [here](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2/data) but, for this example, there is a small subset stored in S3 (see below).  In this example, I envision running one terminal on the local machine and two more on the GPDB master host (see pictures, below).
 
 1. Resolve the dependencies: `go get github.com/wvanbergen/kafka/consumergroup github.com/Shopify/sarama`
 1. Build the executable: `go build kafka_consumer.go`
