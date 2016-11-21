@@ -1,3 +1,5 @@
 #!/bin/bash
 
-./kafka_2.11-0.10.0.0/bin/kafka-topics.sh --list --zookeeper localhost:2181
+. ./kafka_env.sh
+$kafka_dir/bin/kafka-topics.sh --list --zookeeper 104.198.249.198:2181
+
