@@ -31,7 +31,15 @@ in parallel, to ingest data.
 
 ## What's Required to Get This Running?
 * A Running Kafka installation.  I followed the [Quick Start](http://kafka.apache.org/07/quickstart.html).  My installation directory was `./kafka_2.11-0.10.0.0`, so this will appear in the Kafka commands, below.
-* A [Go installation](https://golang.org/doc/install)
+* A [Go installation](https://golang.org/doc/install).  Basically:
+  * Extract the Go distribution into /usr/local
+  * Create a working directory for Go: `mkdir $HOME/go`
+  * Set up your environment (in `$HOME/.bashrc`):
+    ```
+    export GOROOT=/usr/local/go
+    export GOPATH=$HOME/go
+    export PATH=$PATH:$GOROOT/bin
+    ```
 * An installation of GPDB.  The [GPDB Sandbox VM](https://network.pivotal.io/products/pivotal-gpdb#/releases/1683/file_groups/411) would work just fine for trying this out.
 * The [Go source file](./kafka_consumer.go) for the Kafka consumer
 * A [Kafka producer](./kafka_producer.go) (one is supplied here)
