@@ -47,6 +47,8 @@ func main() {
 
 	config := sarama.NewConfig()
 	config.Producer.Partitioner = partitionerConstructor
+  // See https://github.com/Shopify/sarama/issues/816
+  config.Producer.Return.Successes = true
 	producer, err := sarama.NewSyncProducer(strings.Split(*brokerList, ","), config)
 	if err != nil {
 		logger.Fatalln("FAILED to open the producer:", err)
